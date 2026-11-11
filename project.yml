@@ -1,0 +1,87 @@
+name: Fiber
+options:
+  bundleIdPrefix: fun.staraep
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+configFiles:
+  Debug: Config/Base.xcconfig
+  Release: Config/Base.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  Fiber:
+    type: application
+    platform: iOS
+    sources:
+      - path: Fiber
+        excludes:
+          - "Resources/AppleMusicToken.json"
+          - "Resources/SpotifyConfig.json"
+    postBuildScripts:
+      - name: Bundle local service config
+        basedOnDependencyAnalysis: false
+        script: |
+          dest="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          mkdir -p "$dest"
+          for name in AppleMusicToken.json SpotifyConfig.json; do
+            src="${SRCROOT}/Fiber/Resources/${name}"
+            if [[ -f "$src" ]]; then
+              cp "$src" "$dest/$name"
+            fi
+          done
+    info:
+      path: Fiber/Info.plist
+      properties:
+        CFBundleDisplayName: Fiber
+        UILaunchScreen: {}
+        UIBackgroundModes: [audio]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        "UISupportedInterfaceOrientations~ipad": [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        LSApplicationCategoryType: public.app-category.music
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        ITSAppUsesNonExemptEncryption: false
+        NSAppleMusicUsageDescription: Fiber uses Apple Music only when you turn it on in Settings, to search the catalog and play your music.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fun.staraep.fiber
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: YES
+        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: YES
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+  FiberTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FiberTests
+    dependencies:
+      - target: Fiber
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fun.staraep.fiber.tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Fiber:
+    build:
+      targets:
+        Fiber: all
+        FiberTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets: [FiberTests]
+    archive:
+      config: Release

@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src https: data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src https: wss:"><style>html,body{margin:0;height:100%;background:#111;color:#fff;font:17px -apple-system}body{padding:24px;box-sizing:border-box}button{font:inherit;padding:16px 20px;border:0;border-radius:16px;background:#fff;color:#111}</style></head><body><button id="enable">Enable Audio</button><p id="status">Spotify plays inside Fiber. One tap lets iOS start the audio.</p><script>
+let player, tokenCallback;
+const send=(type,extra={})=>webkit.messageHandlers.fiber.postMessage({type,...extra});
+const show=message=>{const node=document.getElementById('status'); if(node) node.textContent=message};
+send('diagnostic',{secure:window.isSecureContext,eme:typeof navigator.requestMediaKeySystemAccess,legacyEME:typeof window.WebKitMediaKeys});
+window.receiveToken=token=>{if(tokenCallback){const callback=tokenCallback; tokenCallback=null; callback(token)}};
+window.fiberActivate=async(report)=>{
+ if(!player) return;
+ try{await player.activateElement(); if(!player._fiberConnected){await player.connect(); player._fiberConnected=true}}
+ catch(e){ if(report){show(String(e)); send('error',{message:String(e)})} }
+};
+window.onSpotifyWebPlaybackSDKReady=()=>{
+ player=new Spotify.Player({name:'Fiber',getOAuthToken:cb=>{tokenCallback=cb;send('token')},enableMediaSession:false});
+ player.addListener('ready',({device_id})=>{show('Connected. You can return to the player.'); send('ready',{device:device_id})});
+ player.addListener('not_ready',()=>{player._fiberConnected=false; send('error',{message:'Spotify disconnected inside Fiber. Tap Enable Audio again.'})});
+ for(const event of ['initialization_error','authentication_error','account_error','playback_error']) player.addListener(event,({message})=>{show(message||event); send('error',{message:event+': '+(message||'failed')})});
+ player.addListener('autoplay_failed',()=>{show('Tap Enable Audio to play Spotify inside Fiber.'); send('notice',{message:'Tap Enable Audio, then play the song again.'})});
+ player.addListener('player_state_changed',s=>{if(s&&s.track_window&&s.track_window.current_track) send('state',{id:s.track_window.current_track.id,position:s.position,paused:s.paused})});
+};
+document.getElementById('enable').onclick=()=>window.fiberActivate(true);
+</script><script src="https://sdk.scdn.co/spotify-player.js" onerror="show('Could not load the Spotify player.');send('error',{message:'Spotify player could not be loaded.'})"></script></body></html>

@@ -1,0 +1,3 @@
+// Signing values live in Config/Signing.xcconfig, which is not committed.
+// Copy Signing.example.xcconfig to Signing.xcconfig and set your team.
+#include? "Signing.xcconfig"
