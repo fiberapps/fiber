@@ -1,59 +1,69 @@
-<img src="Fiber/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="Fiber icon">
+<p align="center">
+  <img src="Fiber/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="132" alt="Fiber">
+</p>
 
-# Fiber
+<h1 align="center">Fiber</h1>
 
-Music for iPhone, iPad, and Mac. The song plays here, the queue stays here, and the lyrics are big enough to read.
+<p align="center">
+  a little music player for your phone, your iPad, and your Mac.<br>
+  the song plays here. the queue stays here. the lyrics get big.
+</p>
 
-[![Release 0.1.0](https://img.shields.io/badge/release-0.1.0-f23d6d)](https://github.com/staraepp/fiber/releases/tag/v0.1.0)
-[![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-f23d6d)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/staraepp/fiber?color=f23d6d&label=stars)](https://github.com/staraepp/fiber/stargazers)
+<p align="center">
+  <a href="https://github.com/staraepp/fiber/releases/tag/v0.1.0"><img alt="0.1.0" src="https://img.shields.io/badge/0.1.0-ff8fa3?style=flat"></a>
+  <a href="LICENSE"><img alt="GPL-3.0" src="https://img.shields.io/badge/GPL--3.0-ffc2d4?style=flat"></a>
+  <a href="https://github.com/staraepp/fiber/stargazers"><img alt="stars" src="https://img.shields.io/github/stars/staraepp/fiber?style=flat&color=ff8fa3&label=stars"></a>
+</p>
+
+<br>
 
 <table>
   <tr>
-    <td><img src="docs/screenshots/home.jpg" alt="Home"></td>
-    <td><img src="docs/screenshots/player.jpg" alt="Now playing"></td>
-    <td><img src="docs/screenshots/lyrics.jpg" alt="Lyrics"></td>
-    <td><img src="docs/screenshots/new.jpg" alt="New"></td>
-  </tr>
-  <tr>
-    <td align="center">Home</td>
-    <td align="center">Now playing</td>
-    <td align="center">Lyrics</td>
-    <td align="center">New</td>
+    <td width="25%" align="center"><img src="docs/screenshots/home.jpg" alt="Home"><br><sub>home</sub></td>
+    <td width="25%" align="center"><img src="docs/screenshots/new.jpg" alt="New"><br><sub>new</sub></td>
+    <td width="25%" align="center"><img src="docs/screenshots/player.jpg" alt="Now playing"><br><sub>now playing</sub></td>
+    <td width="25%" align="center"><img src="docs/screenshots/lyrics.jpg" alt="Lyrics"><br><sub>lyrics</sub></td>
   </tr>
 </table>
 
-Those shots are the demo that ships with Fiber. The artists are invented, the covers are drawn on the device, and the songs are real audio. Every tab says so. Turn the demo off in Settings when you want a quiet library.
+<p align="center"><sub>the demo that comes with Fiber. invented artists, covers drawn on the device, songs you can actually hear. every tab says so. turn it off in Settings whenever you like.</sub></p>
 
-## Listening
+## what's in it
 
-Five tabs: Home, New, Radio, Library, Search. A mini-player floats over them. Open a song and the full player takes the screen, with shuffle, repeat one, and repeat queue.
+Home, New, Radio, Library, and Search, with a little player floating over the tabs. Open a song and the whole screen becomes the player: shuffle, repeat one song, or repeat the queue.
 
-Lyrics can be timed to the word when the song has that information. Your own MP3, AAC, ALAC, FLAC, WAV, and AIFF files import from Library. Drop a `.lrc` next to a file and Fiber uses it. The equalizer applies to those files and to the demo.
+Lyrics can follow the words when a song knows them. Bring your own MP3, AAC, ALAC, FLAC, WAV, or AIFF from Library, and a `.lrc` file with the same name sings along. The equalizer is there for those files, and for the demo.
 
-On a Mac the player splits: cover on the left, lyrics on the right.
+On a Mac, the cover sits big on the left and the lyrics sit big on the right.
 
-## Accounts
+## the accounts you already have
 
-Settings, then Music Services. Anything switched off is left alone.
+Settings → Music Services. Leave a switch off and Fiber never bothers that service.
 
-Apple Music uses MusicKit, so a signed build and a subscription are what play the catalog. Spotify plays inside Fiber and needs Premium. The first song asks you to enable audio once. YouTube Music signs in with the Google account that holds the library, and Fiber plays the audio itself. If a song cannot be streamed, Fiber says so.
+Apple Music plays through MusicKit, so it wants a signed build and a subscription. Spotify plays inside Fiber and wants Premium. The first song asks you, once, to enable audio. YouTube Music signs in with the Google account that holds your library, then Fiber plays the audio itself. If a song can't be streamed, Fiber tells you.
 
-## Build
+## make your own
 
-Xcode 27, [XcodeGen](https://github.com/yonaskolb/XcodeGen), iOS 26. Nothing else to install.
+Xcode 27, [XcodeGen](https://github.com/yonaskolb/XcodeGen), and iOS 26. No extra packages.
 
 ```sh
 xcodegen generate
 open Fiber.xcodeproj
 ```
 
-Run the Fiber scheme.
+Run the Fiber scheme. With nothing connected, the demo is already playing.
 
-Keys never go in git. Copy `.env.example` to `.env`, then run `scripts/prepare_music_token.py` and `scripts/prepare_spotify_config.py`. For your phone, copy `Config/Signing.example.xcconfig` to `Config/Signing.xcconfig` and put your team id in it. `scripts/package_ipa.sh` and `scripts/package_mac.sh` write into `.build/`, which stays off this repo. An IPA from that script contains your own developer token, so pass it only to people you trust.
+Your keys stay on your computer. Copy `.env.example` to `.env`, then:
 
-## License
+```sh
+python3 scripts/prepare_music_token.py
+python3 scripts/prepare_spotify_config.py
+```
+
+For a phone, copy `Config/Signing.example.xcconfig` to `Config/Signing.xcconfig` and write your team id. `scripts/package_ipa.sh` makes an unsigned iPhone package, and `scripts/package_mac.sh` makes the Mac app. Both land in `.build/`, which is not in this repo. The iPhone package contains your developer token, so only hand it to someone you trust.
+
+## license
 
 Copyright (C) 2026 Star.
 
-Fiber is free software under the [GNU General Public License v3.0](LICENSE). Use it, share it, change it. If you pass on a changed copy, pass on the source under the same license.
+Fiber is free software under the [GNU General Public License v3.0](LICENSE). Use it, share it, change it. If you pass a changed copy along, pass the source along too, under the same license.
